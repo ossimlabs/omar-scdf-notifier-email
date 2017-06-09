@@ -48,44 +48,46 @@ class OmarScdfNotificationEmailApplication {
 			logger.debug("Message received: ${message}")
 		}
 
-        JsonBuilder filesToDownload
+		println "Inside the sendEmail"
 
-        if(null != message.payload) {
+//        JsonBuilder filesToDownload
 
-            // Parse the message
-            final def parsedJson = new JsonSlurper().parseText(message.payload)
-            final String emailAddress = parsedJson.file.bucket
-
-            if (logger.isDebugEnabled()) {
-                //logger.debug("\n-- Parsed Message --\nfileName: ${fileNameFromMessage} \nfileExtension: ${fileExtensionFromMessage}\nbucketName: ${bucketName}\n")
-            }
-
-            // TODO:
-            // This assumes we will always be looking for two files with the aggregator.  Should
-            // we make it so that we can also look for one, or maybe three???
-            if (fileExtension1 == fileExtensionFromMessage) {
-
-                if (logger.isDebugEnabled()) {
-                    //logger.debug("fileExtension1 matches file extension from message")
-                }
-
-                if (s3FileResource.exists()) {
-
-                    // The other file exists! Put both files in a JSON array to send to next processor
-
-
-                } else {
-//                    logger.warn("""
-//					Received notification for file that does not exist:
-//					${s3FileResource.filename}
-//					""")
-                }
-            }
-
-            if (logger.isDebugEnabled()) {
-                //logger.debug("filesToDownload: ${filesToDownload}")
-            }
-        }
+//        if(null != message.payload) {
+//
+//            // Parse the message
+//            final def parsedJson = new JsonSlurper().parseText(message.payload)
+//            final String emailAddress = parsedJson.file.bucket
+//
+//            if (logger.isDebugEnabled()) {
+//                //logger.debug("\n-- Parsed Message --\nfileName: ${fileNameFromMessage} \nfileExtension: ${fileExtensionFromMessage}\nbucketName: ${bucketName}\n")
+//            }
+//
+//            // TODO:
+//            // This assumes we will always be looking for two files with the aggregator.  Should
+//            // we make it so that we can also look for one, or maybe three???
+//            if (fileExtension1 == fileExtensionFromMessage) {
+//
+//                if (logger.isDebugEnabled()) {
+//                    //logger.debug("fileExtension1 matches file extension from message")
+//                }
+//
+//                if (s3FileResource.exists()) {
+//
+//                    // The other file exists! Put both files in a JSON array to send to next processor
+//
+//
+//                } else {
+////                    logger.warn("""
+////					Received notification for file that does not exist:
+////					${s3FileResource.filename}
+////					""")
+//                }
+//            }
+//
+//            if (logger.isDebugEnabled()) {
+//                //logger.debug("filesToDownload: ${filesToDownload}")
+//            }
+//        }
 		//return filesToDownload.toString()
 	}
 
