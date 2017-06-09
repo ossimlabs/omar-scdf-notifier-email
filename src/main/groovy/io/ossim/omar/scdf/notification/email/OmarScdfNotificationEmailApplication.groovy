@@ -3,19 +3,18 @@ package io.ossim.omar.scdf.notification.email
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.cloud.stream.annotation.EnableBinding
-import org.springframework.cloud.stream.annotation.StreamListener
-import org.springframework.cloud.stream.messaging.Processor
+import org.springframework.cloud.stream.messaging.Sink
+import org.springframework.integration.annotation.ServiceActivator
 import org.springframework.messaging.Message
-import org.springframework.messaging.handler.annotation.SendTo
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
- * Created by adrake on 5/31/2017
+ * Created by adrake on 6/09/2017
  */
 
 @SpringBootApplication
-@EnableBinding(Processor.class)
+@EnableBinding(Sink.class)
 class OmarScdfNotificationEmailApplication {
 
 	/**
@@ -37,16 +36,15 @@ class OmarScdfNotificationEmailApplication {
 	 * @param
 	 * @return
 	 */
-	@StreamListener(Processor.INPUT) @SendTo(Processor.OUTPUT)
-	final String sendEmail(final Message<?> message){
+	@ServiceActivator(inputChannel=Sink.INPUT)
+	public void emailSink(Object payload){
 
 		if(logger.isDebugEnabled()){
-			logger.debug("Message received: ${message}")
+			logger.info("Payload received: ${payload}")
 		}
 
-		println "Inside the sendEmail"
-		return "sending email..."
-
 	}
+
+	;
 
 }
