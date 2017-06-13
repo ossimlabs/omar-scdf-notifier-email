@@ -89,12 +89,13 @@ class OmarScdfNotificationEmailApplication {
 				logger.info('Starting to send email...')
 			}
 
-			//String response = "OK"
 			this.templateMessage = new SimpleMailMessage()
 
 			// TODO: Add parsed filename here into the subject line
 			this.templateMessage.setSubject("Image Available for download")
 			this.templateMessage.setFrom(fromEmail)
+			// TODO: Grab the email from the incoming JSON payload, and
+			// remove hard coded value
 			this.templateMessage.setTo("test.me@gmail.com")
 
 			SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage)
