@@ -96,7 +96,7 @@ class OmarScdfNotificationEmailApplication {
 			this.templateMessage.setFrom(fromEmail)
 			// TODO: Grab the email from the incoming JSON payload, and
 			// remove hard coded value
-			this.templateMessage.setTo("test.me@gmail.com")
+			this.templateMessage.setTo("set.me.to.valid.value@gmail.com")
 
 			SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage)
 
