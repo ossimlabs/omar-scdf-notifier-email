@@ -94,9 +94,8 @@ class OmarScdfNotificationEmailApplication {
 
 			// TODO: Add parsed filename here into the subject line
 			this.templateMessage.setSubject("Image Available for download")
-			//this.templateMessage.setFrom(fromEmail)
-			this.templateMessage.setFrom("omarftw@gmail.com")
-			this.templateMessage.setTo("melbsurfer@gmail.com")
+			this.templateMessage.setFrom(fromEmail)
+			this.templateMessage.setTo("test.me@gmail.com")
 
 			SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage)
 
