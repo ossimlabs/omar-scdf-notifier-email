@@ -85,6 +85,16 @@ class OmarScdfNotificationEmailApplication {
  		 */
 		if(null != payload){
 
+            // TODO: Parse the payload
+            def jsonSlurper = new JsonSlurper()
+            def payloadJson = jsonSlurper.parseText(payload)
+
+            String toName = payloadJson.name
+            String toEmail = payloadJson.email
+
+            logger.info("Name: " + toName)
+            logger.info("Email: " + toEmail)
+
 			if(logger.isDebugEnabled()){
 				logger.info('Starting to send email...')
 			}
@@ -92,16 +102,16 @@ class OmarScdfNotificationEmailApplication {
 			this.templateMessage = new SimpleMailMessage()
 
 			// TODO: Add parsed filename here into the subject line
-			this.templateMessage.setSubject("Image Available for download")
+			this.templateMessage.setSubject("Hello ${toName} your image is now available for download")
 			this.templateMessage.setFrom(fromEmail)
-			// TODO: Grab the email from the incoming JSON payload, and
-			// remove hard coded value
-			this.templateMessage.setTo("set.me.to.valid.value@gmail.com")
+
+            // Grab the email from the incoming JSON payload, and
+            this.templateMessage.setTo(payloadJson.email)
 
 			SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage)
 
 			// TODO: add s3 link for the image to download
-			msg.setText("A new image is available for you to download")
+			msg.setText("The following image <IMAGE> is available for you to download")
 
 			try{
 				this.mailSender.send(msg)
