@@ -35,7 +35,7 @@ class OmarScdfNotificationEmailApplication {
 	private final MailSender mailSender
 
 	/**
-	 * Used the SimpleMailMessage to create a new email message template
+	 * Uses the SimpleMailMessage to create a new email message template
 	 */
 	private SimpleMailMessage templateMessage
 
@@ -45,14 +45,22 @@ class OmarScdfNotificationEmailApplication {
 	@Value('${send.from.email}')
 	private final String fromEmail
 
+    @Value('${mail.custom.signature}')
+    private final String customSignature
+
 	/**
-	 * Set the fromEmail if we do not provide one from the
+	 * Set the fromEmail and customSignature if we do not provide one from the
 	 * properties file
+     *
 	 */
 	OmarScdfNotificationEmailApplication(){
 		if(null == fromEmail || fromEmail.equals("")){
 			fromEmail = "omar.dropbox.dg@gmail.com"
 		}
+
+        if(null == customSignature || customSignature.equals("")){
+            customSignature = "The OMAR Dropbox Team TEST"
+        }
 	}
 
 
@@ -65,7 +73,9 @@ class OmarScdfNotificationEmailApplication {
 	}
 
 	/**
-	 * TODO: Application description
+	 * Description: Uses Spring Boot's SimpleMailMessage to send an email
+     *              to a user with a link to an image they have requested
+     *              in and s3 bucket.
 	 *
 	 * @param
 	 * @return
@@ -77,47 +87,57 @@ class OmarScdfNotificationEmailApplication {
 			logger.info("Payload received: ${payload}")
 		}
 
-		String response = "OK"
-
 		/**
-		 *We need to parse the incoming payload
-		 * and grab the name and email address
+		 * We need to parse the incoming payload
+		 * and grab the file location and email address
  		 */
 		if(null != payload){
 
-            // TODO: Parse the payload
+            /**
+             * Uses the Groovy JsonSlurper to parse the incoming
+             * payload message
+             */
             def jsonSlurper = new JsonSlurper()
             def payloadJson = jsonSlurper.parseText(payload)
 
-            String toName = payloadJson.name
-            String toEmail = payloadJson.email
-
-            logger.info("Name: " + toName)
-            logger.info("Email: " + toEmail)
+            String zipFileUrl = payloadJson.zipFileUrl
+            String toEmail = payloadJson.toEmail
 
 			if(logger.isDebugEnabled()){
+                logger.info("Zip File: " + zipFileUrl)
+                logger.info("Email: " + toEmail)
 				logger.info('Starting to send email...')
+                logger.info('fromEmail: ' + fromEmail)
 			}
 
 			this.templateMessage = new SimpleMailMessage()
 
-			// TODO: Add parsed filename here into the subject line
-			this.templateMessage.setSubject("Hello ${toName} your image is now available for download")
-			this.templateMessage.setFrom(fromEmail)
+			this.templateMessage.setSubject("Your image is now available for download")
 
-            // Grab the email from the incoming JSON payload, and
-            this.templateMessage.setTo(payloadJson.email)
+            this.templateMessage.setFrom(fromEmail)
+
+            // Grab the 'to' email from the incoming JSON payload, and
+            this.templateMessage.setTo(toEmail)
 
 			SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage)
 
-			// TODO: add s3 link for the image to download
-			msg.setText("The following image <IMAGE> is available for you to download")
+            /**
+             * Inserts the zip file url into the email message text/body
+             */
+			msg.setText("Hello,\n\n" +
+                    "The following image is available for you to download:\n\n" +
+                    "${zipFileUrl}\n\n" +
+                    "Thank you,\n" +
+                    "${customSignature}\n\n" +
+                    "-------------------------------------------------------------------------------------------\n" +
+                    "Note: This e-mail was auto-generated. Please do not reply.\n" +
+                    "-------------------------------------------------------------------------------------------")
 
 			try{
 				this.mailSender.send(msg)
 			}
 			catch(MailException ex){
-				//response = "NO_OK"
+
 				//String mailError = ex.getMessage()
 				String mailError = ex.printStackTrace()
 
@@ -129,7 +149,6 @@ class OmarScdfNotificationEmailApplication {
 			if(logger.isDebugEnabled()){
 				logger.info('Finished sending email...')
 			}
-
 
 		}
 
