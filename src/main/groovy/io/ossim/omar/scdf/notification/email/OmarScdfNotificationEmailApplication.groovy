@@ -101,7 +101,7 @@ class OmarScdfNotificationEmailApplication {
             def payloadJson = jsonSlurper.parseText(payload)
 
             String zipFileUrl = payloadJson.zipFileUrl
-            String toEmail = payloadJson.toEmail
+            String toEmail = payloadJson.to
 
 			if(logger.isDebugEnabled()){
                 logger.info("Zip File: " + zipFileUrl)
