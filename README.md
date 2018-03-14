@@ -1,1 +1,1 @@
-# omar-scdf-notifier-email
+# omar-scdf-notifier email
